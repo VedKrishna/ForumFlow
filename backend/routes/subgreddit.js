@@ -12,7 +12,7 @@ router.post("/", async (req,res) => {
         //     return res
         //         .status(409)
         //         .send({ message: "Subgreddiit with given name already Exists!" });
-        const newsubgreddit = await new subgreddiit({
+        const newsubgreddit = new subgreddiit({
             admin: req.body.admin,
             description: req.body.description,
             subredditName: req.body.name,
@@ -25,6 +25,10 @@ router.post("/", async (req,res) => {
         newsubgreddit.members.push(req.body.admin)
         await newsubgreddit.save()
         res.status(201).send(newsubgreddit);
+        const userr = await User.findOne({email: req.body.admin})
+        const subred = await subgreddiit.find({subredditName: req.body.name})
+        userr.subgreddiits.push(String(subred[0]._id))
+        await userr.save()
     }
     catch (error) {
         console.log(error)
