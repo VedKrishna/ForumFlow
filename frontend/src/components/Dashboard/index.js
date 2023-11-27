@@ -81,7 +81,7 @@ function Dashboard()
           concern: concern,
           subreddit: subredd,
         }
-        const response = axios.post("/api/reportedpost", {params: data})
+        const response = axios.post("/api/dashboard", {params: data})
     }
 
     const handlereportbutton = () => {
