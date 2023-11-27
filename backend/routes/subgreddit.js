@@ -231,9 +231,12 @@ router.post("/leave", async(req,res) => {
         }
         if(flag === 1)
         {
+            const userr = await User.findOne({email: req.body.params.email})
+            userr.subgreddiits = userr.subgreddiits.filter(subgreddiits => subgreddiits != req.body.params.id)
             subgred.members = subgred.members.filter(email => email!=req.body.params.email)
             subgred.leftusers.push(req.body.params.email)
             console.log(subgred.members)
+            await userr.save()
             await subgred.save()
         }
     }
