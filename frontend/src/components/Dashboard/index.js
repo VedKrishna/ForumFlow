@@ -73,13 +73,13 @@ function Dashboard()
         }
     }
 
-    const handleaddreport = async(id) => {
+    const handleaddreport = async(id, subredd) => {
         setreport(false)
         const data = {
           id: id,
           reporter: localStorage.getItem("token"),
           concern: concern,
-          subreddit: nameform.subreddit,
+          subreddit: subredd,
         }
         const response = axios.post("/api/reportedpost", {params: data})
     }
@@ -121,7 +121,7 @@ function Dashboard()
                         </div>
                         {(reporting)?
                             (
-                                <form onSubmit={(event) => handleaddreport(post._id)}>
+                                <form onSubmit={(event) => handleaddreport(post._id, post.subreddit)}>
                                     <div>
                                         <label htmlFor="report">Add concern:</label>
                                         <input id="report" value={concern} onChange={(event) => setconcern(event.target.value)} required/>
