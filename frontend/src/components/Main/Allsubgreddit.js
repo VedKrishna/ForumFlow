@@ -1,119 +1,178 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../Navbar';
+import styles from './Allsubreddit.css';
 
 const SubredditsList = () => {
+  // State variables
   const [subreddits, setSubreddits] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [tagfilter,settagfilter] = useState('')
+  const [tagFilter, setTagFilter] = useState('');
   const [sortBy, setSortBy] = useState('none');
 
+  // Fetch subreddits on component mount
   useEffect(() => {
     const fetchSubreddits = async () => {
-      const response = await axios.get("/api/subgreddit");
-      console.log(response.data.subredditName)
-      setSubreddits(response.data);
+      try {
+        const response = await axios.get("/api/subgreddit");
+        setSubreddits(response.data);
+      } catch (error) {
+        console.error('Error fetching subreddits:', error);
+      }
     };
 
     fetchSubreddits();
   }, []);
+
+  // Filtering logic
   let filteredSubreddits = subreddits.filter(subreddit => subreddit.subredditName.toLowerCase().includes(searchQuery.toLowerCase()));
-  if(tagfilter)
-  {
-  filteredSubreddits = filteredSubreddits.filter(subreddit => subreddit.tags.includes(tagfilter))
+  if (tagFilter) {
+    filteredSubreddits = filteredSubreddits.filter(subreddit => subreddit.tags.includes(tagFilter));
   }
+
+  // Sorting logic
+  const sortSubreddits = () => {
+    switch (sortBy) {
+      case 'name':
+        return filteredSubreddits.sort((a, b) => a.subredditName.localeCompare(b.subredditName));
+      case 'followers':
+        return filteredSubreddits.sort((a, b) => b.members.length - a.members.length);
+      case 'created_at':
+        return filteredSubreddits.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      default:
+        // 'none' or invalid sortBy value
+        return filteredSubreddits;
+    }
+  };
+
+  const sortedSubreddits = sortSubreddits();
+
+  // Event handlers
   const handleSortByChange = (e) => {
     setSortBy(e.target.value);
   };
-  const handlejoin = async(id) => {
-    try{
-    const data = {
-      id: id,
-      email: localStorage.getItem("token")
-    }
-    const response = await axios.post("/api/subgreddit/join",{params: data}) ;
-    if(response.data.makealert === true)
-    {
-      alert("You have left this subgreddiit once. You can't join again")
-    }
-  }
-  catch(error){
-    console.log(error)
-  }
-  }
-  const handleleave = async(id) => {
-    try{
-    const data = {
-      id: id,
-      email: localStorage.getItem("token")
-    }
-    const response = axios.post("/api/subgreddit/leave",{params: data}) ;
-  }
-  catch(error){
-    console.log(error)
-  }
-  }
-  if (sortBy === 'name') {
-    filteredSubreddits.sort((a, b) => a.subredditName.localeCompare(b.subredditName));
-  } else if (sortBy === 'followers') {
-    filteredSubreddits.sort((a, b) => b.members.length- a.members.length);
-  } else if (sortBy === 'created_at') {
-    filteredSubreddits.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  }
-  else if(sortBy === 'none') {
-    filteredSubreddits.sort((a, b) => (b.admin === localStorage.getItem("token") || b.members.includes(localStorage.getItem("token"))) - (a.admin === localStorage.getItem("token") || a.members.includes(localStorage.getItem("token"))))
-  }
-  // else if(sortBy === 'none') {
-  //   let d = []
-  //   for(let i = 0;i<filteredSubreddits.length;i++)
-  //   {
-  //     if(filteredSubreddits[i].admin === localStorage.getItem("token") || filteredSubreddits[i].members.includes(localStorage.getItem("token")))
-  //     {
-  //       d.push(filteredSubreddits[i])
-  //     }
 
-  //   }
-  //   for(let i = 0;i<filteredSubreddits.length;i++)
-  //   {
-  //     if(!(filteredSubreddits[i].admin === localStorage.getItem("token") || filteredSubreddits[i].members.includes(localStorage.getItem("token"))))
-  //     {
-  //       d.push(filteredSubreddits[i])
-  //     }
+  const handleJoin = async (id) => {
+    try {
+      const data = {
+        id: id,
+        email: localStorage.getItem("token")
+      }
+      const response = await axios.post("/api/subgreddit/join", { params: data });
+      if (response.data.makealert) {
+        alert("You have left this subgreddiit once. You can't join again");
+      }
+    } catch (error) {
+      console.error('Error joining subgreddit:', error);
+    }
+  };
 
-  //   }
-  //   filteredSubreddits = d
+  const handleLeave = async (id) => {
+    try {
+      const data = {
+        id: id,
+        email: localStorage.getItem("token")
+      }
+      await axios.post("/api/subgreddit/leave", { params: data });
+    } catch (error) {
+      console.error('Error leaving subgreddit:', error);
+    }
+  };
 
-  // }
-  //console.log(filteredSubreddits[0])
+  // JSX content
   return (
-    <div>
-        <Navbar />
-      <h1>All subgreddiits</h1>
-      <select value={sortBy} onChange={handleSortByChange}>
-        <option value="none">No filter</option>
-        <option value="name">Sort by name</option>
-        <option value="followers">Sort by followers</option>
-        <option value="created_at">Sort by creation date</option>
-      </select>
-      <input type="text" placeholder="Search Tags" value={tagfilter} onChange={e => settagfilter(e.target.value)} />
-      <input type="text" placeholder="Search subreddits" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
-      <ul>
-        {filteredSubreddits.map(subreddit => (
-          <li key={subreddit._id}>
-            <a href={`/allsubgreddiit/${subreddit._id}`}>{subreddit.subredditName}</a>
-            {!(subreddit.admin === localStorage.getItem("token")) && !(subreddit.members.includes(localStorage.getItem("token"))) && (
-              <button onClick={(event) => handlejoin(subreddit._id)}>Join</button>
-            )}
-            {(subreddit.members.includes(localStorage.getItem("token"))) && !(subreddit.admin === localStorage.getItem("token")) && (
-              <button onClick={(event) => handleleave(subreddit._id)}>Leave</button>
-            )}
-            {(subreddit.admin === localStorage.getItem("token")) && (
-              <button>Delete</button>
-            )}
+    <div className="">
+      {/* Header and Navigation */}
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap" rel="stylesheet" />
+    {/* Bootstrap CSS */}
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css' />
+    {/* Font Awesome CSS */}
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css' />
+    
+      <Navbar />
+      
+
+      <div className='subgreddit'>
+      <h1 className='heading'>SUBGREDDIT</h1>
+ 
+
+    
+
+      {/* Subreddit Search Input */}
+      <div className="d-flex justify-content-center h-75">
+      {/* Search Subreddits */}
+      <div className="searchbarcontainer searchbar" style={{width: "40%"}}>
+        <input
+          className="search_input"
+          type="text"
+          placeholder="Search Subreddits"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <a href="#" className="search_icon">
+          <i className="fas fa-search"></i>
+        </a>
+      </div>
+
+      {/* Search Tags */}
+      <div className="searchbarcontainer searchbar" style={{width: "40%"}}>
+        <input
+          className="search_input"
+          type="text"
+          placeholder="Search Tags"
+          value={tagFilter}
+          onChange={(e) => setTagFilter(e.target.value)}
+        />
+        <a href="#" className="search_icon">
+          <i className="fas fa-search"></i>
+        </a>
+      </div>
+    </div>
+    </div>
+  
+
+
+
+      {/* Subreddits List */}
+      <div className='t'>
+      
+      <div className="container">
+      
+      <ul className={`responsive-table ${styles.subredditsList}`}>
+        <li className="table-header">
+          <div className={`col col-1 ${styles.tableHeader}`}>Subreddit Name</div>
+          <div className={`col col-2 ${styles.tableHeader}`}>Tags</div>
+          <div className={`col col-3 ${styles.tableHeader}`}>Actions</div>
+        </li>
+        {sortedSubreddits.map(subreddit => (
+          <li key={subreddit._id} className="table-row" >
+            <div className={`col col-1 ${styles.subredditName}`}>
+              <a href={`/allsubgreddiit/${subreddit._id}`}>{subreddit.subredditName}</a>
+            </div>
+            <div className={`col col-2 ${styles.tagContainer}`}>
+              {subreddit.tags.map(tag => (
+                <span key={tag} className={styles.tag}>{tag}</span>
+              ))}
+            </div>
+            <div className={`col col-3 ${styles.actions}`}>
+              {!(subreddit.admin === localStorage.getItem("token")) && !(subreddit.members.includes(localStorage.getItem("token"))) && (
+                <button onClick={() => handleJoin(subreddit._id)}>Join</button>
+              )}
+              {(subreddit.members.includes(localStorage.getItem("token"))) && !(subreddit.admin === localStorage.getItem("token")) && (
+                <button onClick={() => handleLeave(subreddit._id)}>Leave</button>
+              )}
+              {(subreddit.admin === localStorage.getItem("token")) && (
+                <button>Leave</button>
+              )}
+            </div>
           </li>
         ))}
       </ul>
     </div>
+    </div>
+   
+    </div>
   );
-}; 
+};
+
 export default SubredditsList;

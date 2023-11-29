@@ -1,0 +1,326 @@
+/* .container{
+    border-radius: 22px;
+    background: #cfcfcf;
+    box-shadow:  13px 13px 19px #b4b4b4,
+                 -13px -13px 19px #eaeaea;
+    padding: 3px 20px;
+    margin: 13px auto;
+    width: 65%;
+}
+
+.body{
+
+}
+
+.content{
+    border-radius: 4px;
+    background: #bababa;
+    box-shadow:  5px 5px 22px #ababab,
+                 -5px -5px 22px #c9c9c9;
+    height: auto;
+    width: 50%;
+    padding: 7px;
+    margin-left: 80px;
+    margin-bottom: 8px;
+}
+
+.votes{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+div.votes > span{
+    padding-right: 20px;
+    padding-top: 200px;
+}
+
+.buttonsContainer{
+
+}
+
+input{
+    border-radius: 4px;
+} */
+
+/* ... your existing styles ... */
+
+/* ... rest of your existing styles ... */
+
+
+button {
+    appearance: none;
+    background-color: #f4f4f4;
+    border: 0.125em solid #1A1A1A;
+    border-radius: 5em;
+    box-sizing: border-box;
+    color: #3B3B3B;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+    margin: 3px;
+    height: auto;
+    max-width: 290px;
+    outline: none;
+    padding: 0.5em 1em;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    will-change: transform;
+}
+
+button:disabled {
+pointer-events: none;
+}
+
+button:hover {
+color: #fff;
+background-color: #1A1A1A;
+box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+transform: translateY(-2px);
+}
+
+button:active {
+box-shadow: none;
+transform: translateY(0);
+}
+
+button.report:hover{
+    color: #fff;
+    background-color: #d74242;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+    transform: translateY(-2px);
+}
+/*
+.card {
+    width: 45%;
+    height: auto;
+    margin-left: 26%;
+    background: rgb(154, 154, 154);
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .imge {
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    padding:10px;
+    height: auto;
+    background-color: #ff5858;
+  }
+  
+  .imge .Usericon {
+    background-color: #414141;
+    transform: translateX(10px) translateY(10px);
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+  }
+  
+  .imge .UserName {
+    background-color: #414141;
+    width: 60px;
+    height: 15px;
+    border-width: 10px;
+    border-radius: 5px;
+    border-color: #262626;
+    color: #262626;
+    font-size: 15px;
+    font-weight: bold;
+    transform: translateX(70px) translateY(-35px);
+  }
+  
+  .imge .Id {
+    background-color: #414141;
+    width: 100px;
+    height: 15px;
+    border-width: 10px;
+    border-radius: 5px;
+    border-color: #262626;
+    color: #262626;
+    font-size: 15px;
+    font-weight: bold;
+    transform: translateX(70px) translateY(-25px);
+  }
+  
+  .Description {
+    border-color: #141414;
+    background-color: #727272;
+    transform: translate(5px, 6px);
+    width: 50%;
+    height: 130px;
+    border-radius: 5px;
+  }
+  
+  /*______Social Media______*/
+  /*
+  .social-media:before {
+    content: " ";
+    display: block;
+    width: 100%;
+    height: 2px;
+    transform: translatey(10px);
+    background: #414141;
+  }
+  
+  .social-media a {
+    margin-right: 15px;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .social-media a:last-child {
+    margin-right: 0;
+  }
+  
+  .social-media a svg {
+    color: #ff5858;
+    transform: translatex(25px) translateY(20px);
+    width: 20px;
+    fill: currentColor;
+  }*/
+
+  .postsContainer {
+    background-color: #f4f4f4;
+    padding: 20px;
+    max-width: 45%; /* Adjust the max-width as needed */
+    margin: 10px auto; /* Center the container */
+  }
+  
+  .postsList {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .postItem {
+    background-color: #fff;
+    margin: 20px 20px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .postContent {
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+  }
+  
+  .subreddit {
+    font-size: 25px;
+    margin-bottom: 8px;
+  }
+
+  .back{
+    background-color: #f9f9f9;
+    margin-right: 200px;
+  }
+  
+  .author {
+    font-style: italic;
+    color: #424242;
+    padding-bottom: 4px;
+    border-bottom: 1px solid black;
+  }
+  
+  .title {
+    font-size: 24px;
+    margin-bottom: 16px;
+    margin-left: 7px;
+  }
+  
+  .content {
+    color: #333;
+    padding-left: 40px;
+  }
+  
+  .postImage {
+    max-width: 200px;
+    height: 200px;
+    margin: 16px 0;
+    padding-left: 20px;
+  }
+  
+  .votes {
+    margin: 16px 16px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  
+  .savedMessage {
+    color: green;
+    font-weight: bold;
+    padding-left: 10px;
+  }
+  
+  .buttonsContainer {
+    display: flex;
+    margin-top: 16px;
+  }
+  
+  /* button {
+    background-color: #3498db;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 8px;
+  }
+  
+  button:hover {
+    background-color: #2980b9;
+  }
+  
+  .report {
+    background-color: #e74c3c;
+  }
+  
+  .report:hover {
+    background-color: #c0392b;
+  } */
+  
+  .commentsContainer {
+    margin-top: 16px;
+  }
+  
+  .commentsList {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .commentItem {
+    background-color: #f9f9f9;
+    margin: 8px 0;
+    padding: 8px;
+    border-radius: 4px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Style for input bars */
+form input {
+    width: 75%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+
+.form{
+    padding: 15px 35px;
+    border-radius: 22px;
+    background: linear-gradient(145deg, #d4d4d4, #fbfbfb);
+    box-shadow:  5px 5px 10px #dbdbdb,
+                 -5px -5px 10px #fbfbfb;
+}
+  
+  /* ... rest of your existing styles ... */
+  

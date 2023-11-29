@@ -143,7 +143,7 @@ router.delete("/following", async(req,res) => {
 			user1.following = user1.following.filter(element => element!=rec)
 			user2.followers = user2.followers.filter(element => element!=rec2)
 			await user1.save()
-			await user2,save()
+			await user2.save()
 		}
 		//res.status(200).send("1089")
 

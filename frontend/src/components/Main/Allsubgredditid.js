@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../Navbar';
 import { useParams } from 'react-router-dom';
-import styles from "./styles.module.css";
+import styles from "../Dashboard/styles.module.css";
 import {
   Nav,
   NavLink,
@@ -17,10 +17,11 @@ const SubredditDetails = () => {
   const [reporting,setreport] = useState(false)
   const [concern, setconcern] = useState('')
   const [comment,setcomment] = useState('')
-  const [postts, setposts] = useState([]);
+  const [postts, setPosts] = useState([]);
   const [nameform, setnameform] = useState({ title: "", content: "", image: "", author: localStorage.getItem("token"), subreddit: useParams().id});
   const [showForm, setShowForm] = useState(false);
   const [subreddit, setSubreddit] = useState(null);
+  const [user, setUser] = useState({})
   const idd = useParams()
 //   console.log(idd)
 let abc = ""
@@ -34,6 +35,8 @@ let abc = ""
         //console.log(p)
       const response = await axios.get(p);
       setSubreddit(response.data);
+      const userr = await axios.get("/api/users", {params: {email: localStorage.getItem("token")}})
+      setUser(userr.data)
     }
     catch(error)
     {
@@ -43,20 +46,45 @@ let abc = ""
 
     fetchSubreddit();
   }, [idd]);
-  const handleSavePost = async(id) => {
+  const handleSavePost = async(id, i) => {
     axios
       .post("/api/savedpost", { post: id, name: localStorage.getItem("token")})
       .catch((err) => console.log(err));
+
+      let updated = [...postts]
+      updated[i].isSaved = true
+      setPosts(updated)
   }
-  const handleupvote = async(id) => {
+
+  const handleUnsavePost = async(id, i) => {
+    let p = "/api/savedpost/"
+    p = p.concat(id)
+    axios
+    .delete(p, {params: {email: localStorage.getItem("token")}})
+    .catch((err) => console.log(err));
+
+    let updated = [...postts]
+    updated[i].isSaved = false
+    setPosts(updated)
+  }
+
+  const handleupvote = async(id, i) => {
     axios
       .post("/api/subgreddit/upvote", { post: id, name: localStorage.getItem("token")})
       .catch((err) => console.log(err));
+
+      let updated = [...postts]
+      updated[i].upvotecount += 1
+      setPosts(updated)
   }
-  const handledownvote = async(id) => {
+  const handledownvote = async(id, i) => {
     axios
       .post("/api/subgreddit/downvote", { post: id, name: localStorage.getItem("token")})
       .catch((err) => console.log(err));
+
+      let updated = [...postts]
+      updated[i].downvotecount += 1
+      setPosts(updated)
   }
   const handleClick = (admin,members) => {
     setShowForm(false)
@@ -67,12 +95,18 @@ let abc = ""
     setShowForm(!showForm)
     }
   }
-  const handleaddcomment = (postt) => {
+  const handleaddcomment = (postt, i, event) => {
+    event.preventDefault()
     try{
       console.log(comment)
       axios
         .post("/api/subgreddit/comments", { post: postt, comment: comment})
         .catch((err) => console.log(err));
+
+        let updated = [...postts]
+        updated[i].comments.push(comment)
+        setPosts(updated)
+        setcomment('')
     }
     catch(error){
       console.log(error)
@@ -84,12 +118,28 @@ let abc = ""
         email: email,
         email2: localStorage.getItem("token")
       }
-    axios.post("/api/users/followers", data)
+      axios.post("/api/users/followers", data)
     }
     catch(error){
       console.log(error)
     }
+
+    let updated = {...user}
+    updated.following.push(email)
+    console.log(updated)
+    setUser(updated)
   }
+
+  const handleUnfollow = async(email) => {
+    axios
+    .delete("/api/users/followers", {params: {email, email2: localStorage.getItem("token")}})
+    .catch((err) => console.log(err))
+    console.log('ok')
+    let updated = {...user}
+    updated.following = updated.following.filter((element) => element != email)
+    setUser(updated)
+  }
+
   const handleChangetitle = (event) => {
     setnameform({ ...nameform, title: event.target.value})
   }
@@ -118,6 +168,7 @@ let abc = ""
       subreddit: nameform.subreddit,
     }
     const response = axios.post("/api/reportedpost", {params: data})
+    setconcern('')
 
   }
   const handleSubmit = async (e) => {
@@ -147,13 +198,13 @@ let abc = ""
       let r = p.concat(q)
       const response = await axios.get(r);
       //console.log(response.data.subredditName)
-      setposts(response.data);
+      setPosts(response.data);
     };
 
     fetchposts();
   }, []);
   const handlereportbutton = () => {
-    setreport(true)
+    setreport(!reporting)
   }
   if (!subreddit) {
     return <div>Loading...</div>;
@@ -232,66 +283,94 @@ let abc = ""
       </form>
     </div>
       )}
-      <h2>Posts</h2>
-      <ul>
-        {postts.map(postt => (
-          <li key={postt._id}>
-            <h3>Title: {postt.title}</h3>
-            <p>Content: {postt.textSubmission}</p>
-            <p>Author: {postt.author}</p>
-            {postt.image == "" || postt.image == null? "" : <img width={200} height={200} src={postt.image} style={{marginRight: '100%'}}/>}
-            <p>Upvote count: {postt.upvotecount}</p>
-            <p>Downvote count: {postt.downvotecount}</p>
-            <button onClick={(event) => handleFollow(postt.author)}> Follow </button>
-            {(((subreddit.admin === localStorage.getItem("token")) || subreddit.members.includes(localStorage.getItem("token"))) && postt.isSaved) ? (
-        <p>Post saved!</p>
-      ) : ((((subreddit.admin === localStorage.getItem("token")) || subreddit.members.includes(localStorage.getItem("token"))))?(
-        <button onClick={(event) => handleSavePost(postt._id)}>Save post</button>
-      ):(
-        <div>
-
-        </div>
-      )
-
-      )}
-      {((subreddit.admin === localStorage.getItem("token")) || subreddit.members.includes(localStorage.getItem("token"))) && (
-        <div>
-      <button onClick={(event) => handleupvote(postt._id)}>Upvote</button>
-      <button onClick={(event) => handledownvote(postt._id)}>Downvote</button>
-      <button onClick={(event) => handlereportbutton()}>Report</button>
-      </div>
-      )}
-      {((subreddit.admin === localStorage.getItem("token")) || subreddit.members.includes(localStorage.getItem("token"))) && reporting && (
-        <form onSubmit={(event) => handleaddreport(postt._id)}>
-          <div>
-            <label htmlFor="report">Add concern:</label>
-            <input id="report" value={concern} onChange={(event) => setconcern(event.target.value)} required/>
+      <div style={{backgroundColor: '#f4f4f4'}}>
+            <h2 style={{marginTop: '0', paddingTop: '40px', paddingRight: '640px'}}>Posts:</h2>
+            <ul className={styles.postsContainer} style={{listStyle: 'none'}}>
+              {postts.map((postt,i) => (
+                <li key={postt._id} className={styles.postItem}>
+                  <div className={styles.postContent}>
+                    <p className={styles.author}>Author: {postt.author}</p>
+                    <div className={styles.back}>
+                    <h3 className={styles.title}>{postt.title}</h3>
+                    <div className={styles.content}>
+                      <p>{postt.textSubmission}</p>
+                    </div>
+                    {postt.image && (
+                      <img
+                        className={styles.postImage}
+                        src={postt.image}
+                        alt={`Post by ${postt.author}`}
+                      />
+                    )}
+                    </div>
+                    <div className={styles.votes}>
+                      <span style={{paddingRight: '10px'}} className={styles.upvotes} id={i}>Upvotes: {postt.upvotecount}</span>
+                      <span style={{paddingLeft: '10px'}} className={styles.downvotes} id={i}>Downvotes: {postt.downvotecount}</span>
+                    </div>
+                    <div className={styles.buttonsContainer}>
+                      {user.following.includes(postt.author) ? (
+                        <button onClick={(event) => handleUnfollow(postt.author)}>Unfollow</button>
+                      ) : (
+                        <button onClick={(event) => handleFollow(postt.author)}>Follow</button>
+                      )}
+                      {postt.isSaved ? (
+                        <button onClick={(event) => handleUnsavePost(postt._id, i)}>Unsave post</button>
+                      ) : (
+                        <button onClick={(event) => handleSavePost(postt._id, i)}>Save post</button>
+                      )}
+                    </div>
+                    <div className={styles.buttonsContainer} style={{marginBottom: '20px'}}>
+                      <button onClick={(event) => handleupvote(postt._id, i)}>Upvote</button>
+                      <button onClick={(event) => handledownvote(postt._id, i)}>Downvote</button>
+                      <button onClick={(event) => handlereportbutton()} className={styles.report}>
+                        Report
+                      </button>
+                    </div>
+                    {reporting && (
+                      <form onSubmit={(event) => handleaddreport(postt._id, postt.subreddit)} className={styles.form}>
+                        <div>
+                          <label htmlFor="report">Add concern:   </label>
+                          <input
+                            id="report"
+                            value={concern}
+                            onChange={(event) => setconcern(event.target.value)}
+                            required
+                          />
+                        </div>
+                        <button type="submit">Submit Report</button>
+                      </form>
+                    )}
+                    <div>
+                      <br/>
+                      <form onSubmit={(event) => handleaddcomment(postt._id, i, event)}>
+                        <div>
+                          <label htmlFor="comment">Add Comment: </label>
+                          <input
+                            id="comment"
+                            value={comment}
+                            onChange={(event) => setcomment(event.target.value)}
+                            required
+                          />
+                        </div>
+                        <button type="submit">Submit</button>
+                      </form>
+                    </div>
+                  </div>
+                  <div className={styles.commentsContainer}>
+                    <h3>Comments: </h3>
+                    <h3>{postt.comments.length}</h3>
+                    <ul className={styles.commentsList}>
+                      {postt.comments.map((comment, index) => (
+                        <li key={index} className={styles.commentItem}>
+                          {comment}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
-          <button type="submit">Submit Report</button>
-        </form>
-      )}
-      {((subreddit.admin === localStorage.getItem("token")) || subreddit.members.includes(localStorage.getItem("token"))) && (
-        <div>
-      <br />
-      <form onSubmit={(event) => handleaddcomment(postt._id)}>
-  <div>
-    <label htmlFor="comment">Add Comment:</label>
-    <input id="comment" value={comment} onChange={(event) => setcomment(event.target.value)} required/>
-  </div>
-  <button type="submit">Submit</button>
-</form>
-</div>
-      )}
-<h3>Comments:</h3>
-<h3>{postt.comments.length}</h3>
-<ul>
-{postt.comments.map(comment => (
-  <li>{comment}</li>
-))}
-</ul>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 };
