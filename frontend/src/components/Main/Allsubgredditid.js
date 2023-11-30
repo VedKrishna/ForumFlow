@@ -22,6 +22,7 @@ const SubredditDetails = () => {
   const [showForm, setShowForm] = useState(false);
   const [subreddit, setSubreddit] = useState(null);
   const [user, setUser] = useState({})
+  const [loading, setLoading] = useState(true)
   const idd = useParams()
 //   console.log(idd)
 let abc = ""
@@ -52,7 +53,7 @@ let abc = ""
       .catch((err) => console.log(err));
 
       let updated = [...postts]
-      updated[i].isSaved = true
+      updated[i].savedby.push(localStorage.getItem('token'))
       setPosts(updated)
   }
 
@@ -64,7 +65,7 @@ let abc = ""
     .catch((err) => console.log(err));
 
     let updated = [...postts]
-    updated[i].isSaved = false
+    updated[i].savedby = updated[i].savedby.filter((element) => element != localStorage.getItem('token'))
     setPosts(updated)
   }
 
@@ -199,6 +200,7 @@ let abc = ""
       const response = await axios.get(r);
       //console.log(response.data.subredditName)
       setPosts(response.data);
+      setLoading(false)
     };
 
     fetchposts();
@@ -283,8 +285,14 @@ let abc = ""
       </form>
     </div>
       )}
+      {loading && <h1>Loading the posts</h1>}
+      {!loading &&
       <div style={{backgroundColor: '#f4f4f4'}}>
-            <h2 style={{marginTop: '0', paddingTop: '40px', paddingRight: '640px'}}>Posts:</h2>
+            {postts.length > 0 ? (
+              <h2 style={{marginTop: '0', paddingTop: '40px', paddingRight: '640px'}}>Posts:</h2>
+              ) : (
+                <h2 style={{marginTop: '0', paddingTop: '40px', paddingRight: '640px'}}>No posts yet!!</h2>
+              )}
             <ul className={styles.postsContainer} style={{listStyle: 'none'}}>
               {postts.map((postt,i) => (
                 <li key={postt._id} className={styles.postItem}>
@@ -313,7 +321,7 @@ let abc = ""
                       ) : (
                         <button onClick={(event) => handleFollow(postt.author)}>Follow</button>
                       )}
-                      {postt.isSaved ? (
+                      {postt.savedby.includes(localStorage.getItem('token')) ? (
                         <button onClick={(event) => handleUnsavePost(postt._id, i)}>Unsave post</button>
                       ) : (
                         <button onClick={(event) => handleSavePost(postt._id, i)}>Save post</button>
@@ -370,7 +378,7 @@ let abc = ""
                 </li>
               ))}
             </ul>
-          </div>
+          </div> }
     </div>
   );
 };

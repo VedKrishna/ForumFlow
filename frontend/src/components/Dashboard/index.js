@@ -12,6 +12,7 @@ function Dashboard()
     const [reporting,setreport] = useState(false)
     const [concern, setconcern] = useState('')
     const [comment,setcomment] = useState('')
+    const [loading, setLoading] = useState(true)
     const [nameform, setnameform] = useState({subreddit: useParams().id});
 
     useEffect(() => {
@@ -25,6 +26,7 @@ function Dashboard()
               const userr = await axios.get("/api/users", {params: {email: localStorage.getItem("token")}})
               setUser(userr.data)
               setPosts(response.data)
+              setLoading(false)
             }
             catch(error){
                 console.log(error)
@@ -40,7 +42,7 @@ function Dashboard()
           .catch((err) => console.log(err));
 
           let updated = [...posts]
-          updated[i].isSaved = true
+          updated[i].savedby.push(localStorage.getItem('token'))
           setPosts(updated)
     }
 
@@ -52,7 +54,7 @@ function Dashboard()
       .catch((err) => console.log(err));
 
       let updated = [...posts]
-      updated[i].isSaved = false
+      updated[i].savedby = updated[i].savedby.filter((element) => element != localStorage.getItem('token'))
       setPosts(updated)
     }
 
@@ -143,8 +145,14 @@ function Dashboard()
     return (
         <div>
           <Navbar />
+          {loading && <h1>LOADING</h1>}
+          {!loading &&
           <div style={{backgroundColor: '#f4f4f4'}}>
-            <h2 style={{paddingLeft: '20px', marginTop: '0', paddingTop: '20px'}}>Latest updates from the forums you follow:</h2>
+          {posts.length > 0 ? (
+              <h2 style={{marginTop: '0', paddingTop: '40px', paddingRight: '640px'}}>Latest updates from the forums you follow:</h2>
+              ) : (
+              <h2 style={{marginTop: '0', paddingTop: '40px', paddingRight: '640px'}}>You don't follow any forums!!</h2>
+          )}
             <ul className={styles.postsContainer} style={{listStyle: 'none'}}>
               {posts.map((post,i) => (
                 <li key={post._id} className={styles.postItem}>
@@ -174,7 +182,7 @@ function Dashboard()
                       ) : (
                         <button onClick={(event) => handleFollow(post.author)}>Follow</button>
                       )}
-                      {post.isSaved ? (
+                      {post.savedby.includes(localStorage.getItem('token')) ? (
                         <button onClick={(event) => handleUnsavePost(post._id, i)}>Unsave post</button>
                       ) : (
                         <button onClick={(event) => handleSavePost(post._id, i)}>Save post</button>
@@ -231,7 +239,7 @@ function Dashboard()
                 </li>
               ))}
             </ul>
-          </div>
+          </div> }
         </div>
       );
 

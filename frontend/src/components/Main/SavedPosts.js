@@ -1,114 +1,171 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../Navbar';
+import styles from '../Dashboard/styles.module.css'
 
 const SavedPosts = () => {
   const [comment,setcomment] = useState('')
-  const [postts, setposts] = useState([]);
+  const [postts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('name');
-  const handleaddcomment = (postt) => {
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const response = await axios.get("/api/savedpost");
+      console.log(response.data)
+      const filtered = response.data.filter(postts => postts.savedby.includes(localStorage.getItem("token")));
+      setPosts(filtered);
+      setLoading(false)
+    };
+
+    fetchPosts();
+  }, []);
+
+  const handleaddcomment = (postt, i, event) => {
+    event.preventDefault()
     try{
       console.log(comment)
       axios
         .post("/api/subgreddit/comments", { post: postt, comment: comment})
         .catch((err) => console.log(err));
+
+      let updated = [...postts]
+      updated[i].comments.push(comment)
+      setPosts(updated)
+      setcomment('')
     }
     catch(error){
       console.log(error)
     }
   }
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const response = await axios.get("/api/savedpost");
-      //console.log(response.data)
-      // const filtered = []
-      // let i =0
-      // for(i = 0;i<response.data.length;i++)
-      // {
-      //   if((response.data)[i].user === localStorage.getItem("token"))
-      //   {
-      //     filtered.push((response.data)[i])
-      //   }
-      // }
-      console.log(response.data)
-      const filtered = response.data.filter(postts => postts.savedby.includes(localStorage.getItem("token")));
-      //console.log(filtered)
-      setposts(filtered);
-    };
 
-    fetchPosts();
-  }, []);
-  const fetchPosts = async () => {
-    const response = await axios.get("/api/savedpost");
-    const filtered = response.data.filter(postts => postts.savedby.includes(localStorage.getItem("token")));
-    //console.log(filtered)
-    setposts(filtered);
-  };
-  const handleupvote = async(id) => {
+  const handleupvote = async(id, iii) => {
     axios
       .post("/api/subgreddit/upvote", { post: id, name: localStorage.getItem("token")})
       .catch((err) => console.log(err));
+
+      let updated = [...postts]
+      updated[iii].upvotecount += 1
+      setPosts(updated)
   }
-  const handledownvote = async(id) => {
+
+  const handledownvote = async(id, iii) => {
     axios
       .post("/api/subgreddit/downvote", { post: id, name: localStorage.getItem("token")})
       .catch((err) => console.log(err));
+
+      let updated = [...postts]
+      updated[iii].downvotecount += 1
+      setPosts(updated)
   }
-  const handleunsave = async(postid) => {
+
+  const handleUnsavePost = async(postid, i) => {
     try{
-      const data = {
-        email: localStorage.getItem("token")
-      }
-      console.log(postid)
-      let c = "/api/savedpost/"
-      let d = postid
-      let p = c.concat(d)
-      console.log(p)
-    await axios.delete(p, {params: data})
-    fetchPosts()
+      let p = "/api/savedpost/"
+      p = p.concat(postid)
+      axios.delete(p, {params: {email: localStorage.getItem("token")}})
+      
+      let updated = [...postts]
+      updated[i].savedby = updated[i].savedby.filter((element) => element != localStorage.getItem('token'))
+      setPosts(updated)
+      show()
     }
     catch(error)
     {
       console.log(error)
     }
   }
-  //console.log(filteredSubreddits[0])
+
+  const show = () => {
+    console.log(postts)
+  }
+
+  const handleSavePost = async(id, i) => {
+    axios
+      .post("/api/savedpost", { post: id, name: localStorage.getItem("token")})
+      .catch((err) => console.log(err));
+
+      let updated = [...postts]
+      updated[i].savedby.push(localStorage.getItem('token'))
+      setPosts(updated)
+}
+  
   return (
     <div>
         <Navbar />
-      <h1>Saved Posts</h1>
-      <ul>
-        {postts.map(post => (
-          <li key={post._id}>
-              <p>Title: {post.title}</p>
-              <p>Content: {post.textSubmission}</p>
-              <p>Created by: {post.author}</p>
-              {post.image == "" || post.image == null? "" : <img width={200} height={200} src={post.image} style={{marginRight: '100%'}}/>}
-              <p>Subgreddiit: {post.subreddit}</p>
-              <p>Upvote count: {post.upvotecount}</p>
-              <p>Downvote count: {post.downvotecount}</p>
-              <button onClick={(event) => handleunsave(post._id)}>Unsave</button>
-              <button onClick={(event) => handleupvote(post._id)}>Upvote</button>
-              <button onClick={(event) => handledownvote(post._id)}>Downvote</button>
-              <br />
-              <form onSubmit={(event) => handleaddcomment(post._id)}>
-  <div>
-    <label for="comment">Add Comment:</label>
-    <input id="comment" value={comment} onChange={(event) => setcomment(event.target.value)} required/>
-  </div>
-  <button type="submit">Submit</button>
-</form>
-<h3>Comments:</h3>
-<h3>{post.comments.length}</h3>
-<ul>
-{post.comments.map(comment => (
-  <li>{comment}</li>
-))}
-</ul>
-          </li>
-        ))}
-      </ul>
+        {loading && <h1>LOADING</h1>}
+        {!loading &&
+        <div style={{backgroundColor: '#f4f4f4'}}>
+        {postts.length > 0 ? (
+          <h2 style={{marginTop: '0', paddingTop: '40px', paddingRight: '640px'}}>Posts:</h2>
+          ) : (
+          <h2 style={{marginTop: '0', paddingTop: '40px', paddingRight: '640px'}}>No posts yet!!</h2>
+        )}
+      <ul className={styles.postsContainer} style={{listStyle: 'none'}}>
+              {postts.map((post,i) => (
+                <li key={post._id} className={styles.postItem}>
+                  <div className={styles.postContent}>
+                    <h2 className={styles.subreddit}>Subgreddiit: {post.subreddit}</h2>
+                    <p className={styles.author}>Author: {post.author}</p>
+                    <div className={styles.back}>
+                    <h3 className={styles.title}>{post.title}</h3>
+                    <div className={styles.content}>
+                      <p>{post.textSubmission}</p>
+                    </div>
+                    {post.image && (
+                      <img
+                        className={styles.postImage}
+                        src={post.image}
+                        alt={`Post by ${post.author}`}
+                      />
+                    )}
+                    </div>
+                    <div className={styles.votes}>
+                      <span style={{paddingRight: '10px'}} className={styles.upvotes} id={i}>Upvotes: {post.upvotecount}</span>
+                      <span style={{paddingLeft: '10px'}} className={styles.downvotes} id={i}>Downvotes: {post.downvotecount}</span>
+                    </div>
+                    <div className={styles.buttonsContainer}>
+                      {post.savedby.includes(localStorage.getItem('token')) ? (
+                        <button onClick={(event) => handleUnsavePost(post._id, i)}>Unsave post</button>
+                      ) : (
+                        <button onClick={(event) => handleSavePost(post._id, i)}>Save Post</button>
+                      )}
+                    </div>
+                    <div className={styles.buttonsContainer} style={{marginBottom: '20px'}}>
+                      <button onClick={(event) => handleupvote(post._id, i)}>Upvote</button>
+                      <button onClick={(event) => handledownvote(post._id, i)}>Downvote</button>
+                    </div>
+                    <div>
+                      <br/>
+                      <form onSubmit={(event) => handleaddcomment(post._id, i, event)}>
+                        <div>
+                          <label htmlFor="comment">Add Comment: </label>
+                          <input
+                            id="comment"
+                            value={comment}
+                            onChange={(event) => setcomment(event.target.value)}
+                            required
+                          />
+                        </div>
+                        <button type="submit">Submit</button>
+                      </form>
+                    </div>
+                  </div>
+                  <div className={styles.commentsContainer}>
+                    <h3>Comments: </h3>
+                    <h3>{post.comments.length}</h3>
+                    <ul className={styles.commentsList}>
+                      {post.comments.map((comment, index) => (
+                        <li key={index} className={styles.commentItem}>
+                          {comment}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </li>
+              ))}
+            </ul>
+        </div> }
     </div>
   );
 }; 
