@@ -285,7 +285,9 @@ let abc = ""
       </form>
     </div>
       )}
-      {loading && <h1>Loading the posts</h1>}
+      {loading && <div className={styles.loaderContainer} style={{paddingTop: '30px'}}>
+              <div className={styles.loader}></div>
+            </div>}
       {!loading &&
       <div style={{backgroundColor: '#f4f4f4'}}>
             {postts.length > 0 ? (

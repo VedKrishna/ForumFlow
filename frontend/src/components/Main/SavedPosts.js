@@ -93,7 +93,9 @@ const SavedPosts = () => {
   return (
     <div>
         <Navbar />
-        {loading && <h1>LOADING</h1>}
+        {loading && <div className={styles.loaderContainer}>
+                        <div className={styles.loader}></div>
+                      </div>}
         {!loading &&
         <div style={{backgroundColor: '#f4f4f4'}}>
         {postts.length > 0 ? (
