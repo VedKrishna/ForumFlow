@@ -226,10 +226,11 @@ let abc = ""
   
   return (
     <div>
+      
       <Navbar />
-      <Nav>
+      <div style={{borderTop:"1px solid black"}}>
+      <Nav style={{paddingLeft:"438px"}}>
         <Bars />
-  
         <NavMenu>
         <NavLink to={url} activeStyle>
             Users
@@ -240,51 +241,100 @@ let abc = ""
           <NavLink to={url1} activeStyle>
             Reports
           </NavLink>
-          <NavLink to='/stats' activeStyle>
+          <NavLink to={url} activeStyle>
             Stats
           </NavLink>
         </NavMenu>
       </Nav>
-      <img src="https://source.unsplash.com/random" alt="Random Image" width="200" height="200"></img>
-      <h1>Name: {subreddit.subredditName}</h1>
-      <p>Description: {subreddit.description}</p>
-      <p>Created by: {subreddit.admin}</p>
-      <p>Banned key words:</p>
-      <p>{commasep}</p>
-      <p>Number of posts: {subreddit.posts.length}</p>
-      <p>Number of users: {subreddit.members.length}</p>
-      <button onClick={(event) => handleClick(subreddit.admin,subreddit.members)}>Add new post</button>
-      {showForm && (
-        <div style={{paddingBottom: "100px"}}>
-          <form onSubmit={handleSubmit}>
-          <h1>ADD DETAILS</h1>
-          <input
-              type="Title"
-              placeholder="Title"
-              name="title"
-              onChange={handleChangetitle}
-              value={nameform.title}
+      </div>
+      <div className={styles.pageContainer}>
+        <div className={styles.profileContainer}>
+          <img
+            src="https://source.unsplash.com/random"
+            alt="Random Image"
+            className={styles.profileImage}
+            style={{maxHeight: "250px"}}
           />
-          <input
-              type="Content"
-              placeholder="Content"
-              name="content"
-              onChange={handleChangecontent}
-              value={nameform.content}
-          />
-          <input
-            accept='image/*'
-            type="file"
-            name="file"
-            onChange={handleChangefile}
-          />
-          {nameform.image == "" || nameform.image == null? "" : <img width={100} height={100} src={nameform.image}/>}
-          <button type="submit">
-              SUBMIT
-          </button>
-      </form>
+        </div>
+        <div className={styles.tableContainer}>
+          <table className={styles.table}>
+            <tbody>
+              <tr>
+                <th>Name:</th>
+                <td>{subreddit.subredditName}</td>
+              </tr>
+              <tr>
+                <th>Description:</th>
+                <td>{subreddit.description}</td>
+              </tr>
+              <tr>
+                <th>Created by:</th>
+                <td>{subreddit.admin}</td>
+              </tr>
+              <tr>
+                <th>Banned key words:</th>
+                <td>{commasep}</td>
+              </tr>
+              <tr>
+                <th>Number of posts:</th>
+                <td>{subreddit.posts.length}</td>
+              </tr>
+              <tr>
+                <th>Number of users:</th>
+                <td>{subreddit.members.length}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
     </div>
-      )}
+
+    
+      <button style={{margin:"20px 10px"}} onClick={(event) => handleClick(subreddit.admin, subreddit.members)}>Add new post</button>
+{showForm && (
+  <div style={{ paddingBottom: "100px", textAlign: "center" }}>
+    <form onSubmit={handleSubmit} style={{ maxWidth: "400px", margin: "0 auto", border: "1px solid #ccc", padding: "20px", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
+      <h1 style={{ marginBottom: "20px", fontSize: "24px", color: "#333" }}>ADD DETAILS</h1>
+      <div style={{ marginBottom: "15px" }}>
+        <label htmlFor="title" style={{ display: "block", fontSize: "16px", marginBottom: "5px" }}>Title:</label>
+        <input
+          type="text"
+          id="title"
+          placeholder="Enter title"
+          name="title"
+          onChange={handleChangetitle}
+          value={nameform.title}
+          style={{ width: "300px", padding: "10px", fontSize: "16px", borderRadius: "4px",border: "1px solid #ccc" }}
+        />
+      </div>
+      <div style={{ marginBottom: "15px" }}>
+        <label htmlFor="content" style={{ display: "block", fontSize: "16px", marginBottom: "5px" }}>Content:</label>
+        <textarea
+          id="content"
+          placeholder="Enter content"
+          name="content"
+          onChange={handleChangecontent}
+          value={nameform.content}
+          style={{ width: "300px", padding: "10px", fontSize: "16px", borderRadius: "4px", border: "1px solid #ccc", margin: 'auto' }}
+        />
+      </div>
+      <div style={{ marginBottom: "15px" }}>
+        <label htmlFor="file" style={{ display: "block", fontSize: "16px", marginBottom: "5px" }}>Upload Image:</label>
+        <input
+          accept='image/*'
+          type="file"
+          id="file"
+          name="file"
+          onChange={handleChangefile}
+        />
+        {nameform.image && <img width={100} height={100} src={nameform.image} alt="Selected" style={{ marginTop: "10px", borderRadius: "4px" }} />}
+      </div>
+      <button type="submit" style={{ background: "#4CAF50", color: "#fff", padding: "10px 20px", fontSize: "16px", borderRadius: "4px", cursor: "pointer" }}>
+        SUBMIT
+      </button>
+    </form>
+  </div>
+)}
+
       {loading && <div className={styles.loaderContainer} style={{paddingTop: '30px'}}>
               <div className={styles.loader}></div>
             </div>}

@@ -107,7 +107,7 @@ const SavedPosts = () => {
               {postts.map((post,i) => (
                 <li key={post._id} className={styles.postItem}>
                   <div className={styles.postContent}>
-                    <h2 className={styles.subreddit}>Subgreddiit: {post.subreddit}</h2>
+                    <h2 className={styles.subreddit}>Subforum: {post.subreddit}</h2>
                     <p className={styles.author}>Author: {post.author}</p>
                     <div className={styles.back}>
                     <h3 className={styles.title}>{post.title}</h3>

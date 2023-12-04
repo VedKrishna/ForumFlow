@@ -52,7 +52,7 @@ function Subgreddiit() {
     setnameform({...nameform, bannedkeywords: event.target.value.split(',')});
   }
   const handleClick = () => {
-    setShowForm(true);
+    setShowForm(!showForm);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -79,12 +79,12 @@ function Subgreddiit() {
         <Navbar />
         <div style={{ textAlign: 'center', padding:'20px' }}>
             <button onClick={handleClick} className={[styles.primary_button, styles.button].join(' ')}>
-                Create New Subgreddiit
+                Create New Subforum
             </button>
         </div>
       {showForm && (
         <form className={styles.form_container} onSubmit={handleSubmit}>
-        <h1>SUBGREDDIIT FORM</h1>
+        <h1>SUBFORUM FORM</h1>
         <input
             type="Name"
             placeholder="Name"

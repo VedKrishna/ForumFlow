@@ -60,10 +60,10 @@ const SubredditsList = () => {
       }
       const response = await axios.post("/api/subgreddit/join", { params: data });
       if (response.data.makealert) {
-        alert("You have left this subgreddiit once. You can't join again");
+        alert("You have left this subforum once. You can't join again");
       }
     } catch (error) {
-      console.error('Error joining subgreddit:', error);
+      console.error('Error joining subforum:', error);
     }
   };
 
@@ -75,7 +75,7 @@ const SubredditsList = () => {
       }
       await axios.post("/api/subgreddit/leave", { params: data });
     } catch (error) {
-      console.error('Error leaving subgreddit:', error);
+      console.error('Error leaving subforum:', error);
     }
   };
 
@@ -83,17 +83,17 @@ const SubredditsList = () => {
   return (
     <div className="">
       {/* Header and Navigation */}
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap" rel="stylesheet" />
+    {/* <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap" rel="stylesheet" /> */}
     {/* Bootstrap CSS */}
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css' />
     {/* Font Awesome CSS */}
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css' />
+    {/* <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css' /> */}
     
       <Navbar />
       
 
       <div className='subgreddit'>
-      <h1 className='heading'>SUBGREDDIT</h1>
+      <h1 className='heading'>SUBFORUM</h1>
  
 
     
@@ -140,7 +140,7 @@ const SubredditsList = () => {
       
       <ul className={`responsive-table ${styles.subredditsList}`}>
         <li className="table-header">
-          <div className={`col col-1 ${styles.tableHeader}`}>Subreddit Name</div>
+          <div className={`col col-1 ${styles.tableHeader}`}>Subforum Name</div>
           <div className={`col col-2 ${styles.tableHeader}`}>Tags</div>
           <div className={`col col-3 ${styles.tableHeader}`}>Actions</div>
         </li>

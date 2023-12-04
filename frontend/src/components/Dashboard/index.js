@@ -22,7 +22,7 @@ function Dashboard()
                   params: { email: localStorage.getItem("token") },
               })
               response.data.sort((a,b) => (a.updatedAt < b.updatedAt)? 1:-1)
-              console.log(typeof response.data[0].upvotecount)
+              // console.log(typeof response.data[0].upvotecount)
               const userr = await axios.get("/api/users", {params: {email: localStorage.getItem("token")}})
               setUser(userr.data)
               setPosts(response.data)
@@ -159,7 +159,7 @@ function Dashboard()
               {posts.map((post,i) => (
                 <li key={post._id} className={styles.postItem}>
                   <div className={styles.postContent}>
-                    <h2 className={styles.subreddit}>Subgreddiit: {post.subreddit}</h2>
+                    <h2 className={styles.subreddit}>Subforum: {post.subreddit}</h2>
                     <p className={styles.author}>Author: {post.author}</p>
                     <div className={styles.back}>
                     <h3 className={styles.title}>{post.title}</h3>

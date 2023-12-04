@@ -48,9 +48,9 @@ const DisplayUsers = () => {
   return (
     <div>
         <Navbar />
-        <Nav>
+        <div style={{borderTop:"1px solid black"}}>
+      <Nav style={{paddingLeft:"438px"}}>
         <Bars />
-  
         <NavMenu>
         <NavLink to={url3} activeStyle>
             Users
@@ -66,8 +66,9 @@ const DisplayUsers = () => {
           </NavLink>
         </NavMenu>
       </Nav>
+      </div>
       <h1>Users</h1>
-      <p>Subgreddiit Name: {postts.subredditName}</p>
+      <p>Subforum Name: {postts.subredditName}</p>
        <ul>
         {postts.members && postts.members.map(post => (
           <li>

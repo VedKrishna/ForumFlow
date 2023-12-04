@@ -63,9 +63,9 @@ let url3 = "/allsubgreddiit/"
   return (
     <div>
         <Navbar />
-        <Nav>
+        <div style={{borderTop:"1px solid black"}}>
+      <Nav style={{paddingLeft:"438px"}}>
         <Bars />
-  
         <NavMenu>
         <NavLink to={url3} activeStyle>
             Users
@@ -81,6 +81,7 @@ let url3 = "/allsubgreddiit/"
           </NavLink>
         </NavMenu>
       </Nav>
+      </div>
       <h1>Joining Request</h1>
       <p>Subgreddiit Name: {postts.subredditName}</p>
        <ul>

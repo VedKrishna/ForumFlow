@@ -59,9 +59,9 @@ const DisplayReports = () => {
   return (
     <div>
         <Navbar />
-        <Nav>
+        <div style={{borderTop:"1px solid black"}}>
+      <Nav style={{paddingLeft:"438px"}}>
         <Bars />
-  
         <NavMenu>
         <NavLink to={url3} activeStyle>
             Users
@@ -77,6 +77,7 @@ const DisplayReports = () => {
           </NavLink>
         </NavMenu>
       </Nav>
+      </div>
       <h1>Reported Posts</h1>
        <ul>
         {postts && postts.map(post => (
