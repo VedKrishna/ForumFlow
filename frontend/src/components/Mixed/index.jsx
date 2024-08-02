@@ -14,7 +14,7 @@ const ToggleForm = () => {
 	const handleSubmitlogin = async (e) => {
 		e.preventDefault();
 		try {
-			const url = "/api/auth";
+			const url = "/https://forumflow.onrender.com/auth";
 			const { data : res } = await axios.post(url, datalogin);
 			localStorage.setItem("token", res.data);
 			window.location = "/dashboard";
@@ -44,7 +44,7 @@ const ToggleForm = () => {
 		e.preventDefault();
 		try {
 			localStorage.removeItem("token1")
-			const url = "/api/users";
+			const url = "/https://forumflow.onrender.com/users";
 			const { data : res } = await axios.post(url, datasignup);
 			console.log(res.message);
 			window.location = "/"
