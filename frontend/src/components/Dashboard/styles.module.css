@@ -193,13 +193,13 @@ button.report:hover{
 
 /* YourComponent.module.css */
 
-.pageContainer {
+/* .pageContainer {
   background-image: url(..\\Main\\sds.jpeg.jpg);
   display: flex;
   justify-content: space-around;
   align-items: center;
   padding: 20px;
-}
+} */
 
 .profileContainer {
   flex: 1;
