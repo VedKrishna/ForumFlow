@@ -29,3 +29,13 @@ app.use("/api/dashboard", dashboardRoutes)
 
 const port = process.env.PORT || 3001;
 app.listen(port, console.log(`Listening on port ${port}...`));
+
+app.get('/api/test', (req, res) => {
+  res.send('API is working!');
+});
+
+// Root path route for testing
+app.get('/', (req, res) => {
+  res.send('Backend is running!');
+});
+
