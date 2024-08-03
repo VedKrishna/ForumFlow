@@ -23,12 +23,12 @@ const DisplayReports = () => {
         id: id,
     }
     console.log(data)
-    const res = axios.delete("/api/reportedpost", {params: data})
+    const res = axios.delete("https://forumflow.onrender.com/api/reportedpost", {params: data})
   }
   useEffect(() => {
     const fetchPosts = async () => {
         console.log(url)
-      const response = await axios.get("/api/reportedpost", {params: url});
+      const response = await axios.get("https://forumflow.onrender.com/api/reportedpost", {params: url});
       //console.log(response.data)
       // const filtered = []
       // let i =0

@@ -29,14 +29,14 @@ let abc = ""
   useEffect(() => {
     const fetchSubreddit = async () => {
     try{
-        let c = "/api/subgreddit/"
+        let c = "https://forumflow.onrender.com/api/subgreddit/"
         let d = idd.id
         console.log(d)
         let p = c.concat(d)
         //console.log(p)
       const response = await axios.get(p);
       setSubreddit(response.data);
-      const userr = await axios.get("/api/users", {params: {email: localStorage.getItem("token")}})
+      const userr = await axios.get("https://forumflow.onrender.com/api/users", {params: {email: localStorage.getItem("token")}})
       setUser(userr.data)
     }
     catch(error)
@@ -49,7 +49,7 @@ let abc = ""
   }, [idd]);
   const handleSavePost = async(id, i) => {
     axios
-      .post("/api/savedpost", { post: id, name: localStorage.getItem("token")})
+      .post("https://forumflow.onrender.com/api/savedpost", { post: id, name: localStorage.getItem("token")})
       .catch((err) => console.log(err));
 
       let updated = [...postts]
@@ -58,7 +58,7 @@ let abc = ""
   }
 
   const handleUnsavePost = async(id, i) => {
-    let p = "/api/savedpost/"
+    let p = "https://forumflow.onrender.com/api/savedpost/"
     p = p.concat(id)
     axios
     .delete(p, {params: {email: localStorage.getItem("token")}})
@@ -71,7 +71,7 @@ let abc = ""
 
   const handleupvote = async(id, i) => {
     axios
-      .post("/api/subgreddit/upvote", { post: id, name: localStorage.getItem("token")})
+      .post("https://forumflow.onrender.com/api/subgreddit/upvote", { post: id, name: localStorage.getItem("token")})
       .catch((err) => console.log(err));
 
       let updated = [...postts]
@@ -80,7 +80,7 @@ let abc = ""
   }
   const handledownvote = async(id, i) => {
     axios
-      .post("/api/subgreddit/downvote", { post: id, name: localStorage.getItem("token")})
+      .post("https://forumflow.onrender.com/api/subgreddit/downvote", { post: id, name: localStorage.getItem("token")})
       .catch((err) => console.log(err));
 
       let updated = [...postts]
@@ -101,7 +101,7 @@ let abc = ""
     try{
       console.log(comment)
       axios
-        .post("/api/subgreddit/comments", { post: postt, comment: comment})
+        .post("https://forumflow.onrender.com/api/subgreddit/comments", { post: postt, comment: comment})
         .catch((err) => console.log(err));
 
         let updated = [...postts]
@@ -119,7 +119,7 @@ let abc = ""
         email: email,
         email2: localStorage.getItem("token")
       }
-      axios.post("/api/users/followers", data)
+      axios.post("https://forumflow.onrender.com/api/users/followers", data)
     }
     catch(error){
       console.log(error)
@@ -133,7 +133,7 @@ let abc = ""
 
   const handleUnfollow = async(email) => {
     axios
-    .delete("/api/users/followers", {params: {email, email2: localStorage.getItem("token")}})
+    .delete("https://forumflow.onrender.com/api/users/followers", {params: {email, email2: localStorage.getItem("token")}})
     .catch((err) => console.log(err))
     console.log('ok')
     let updated = {...user}
@@ -168,14 +168,14 @@ let abc = ""
       concern: concern,
       subreddit: nameform.subreddit,
     }
-    const response = axios.post("/api/reportedpost", {params: data})
+    const response = axios.post("https://forumflow.onrender.com/api/reportedpost", {params: data})
     setconcern('')
 
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      let c = "/api/subgreddit/"
+      let c = "https://forumflow.onrender.com/api/subgreddit/"
 			let d = idd.id
       let p = c.concat(d)
       let q = "/posts"
@@ -192,7 +192,7 @@ let abc = ""
   }
   useEffect(() => {
     const fetchposts = async () => {
-      let c = "/api/subgreddit/"
+      let c = "https://forumflow.onrender.com/api/subgreddit/"
 			let d = idd.id
       let p = c.concat(d)
       let q = "/posts"

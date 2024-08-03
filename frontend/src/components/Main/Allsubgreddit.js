@@ -14,7 +14,7 @@ const SubredditsList = () => {
   useEffect(() => {
     const fetchSubreddits = async () => {
       try {
-        const response = await axios.get("/api/subgreddit");
+        const response = await axios.get("https://forumflow.onrender.com/api/subgreddit");
         setSubreddits(response.data);
       } catch (error) {
         console.error('Error fetching subreddits:', error);
@@ -58,7 +58,7 @@ const SubredditsList = () => {
         id: id,
         email: localStorage.getItem("token")
       }
-      const response = await axios.post("/api/subgreddit/join", { params: data });
+      const response = await axios.post("https://forumflow.onrender.com/api/subgreddit/join", { params: data });
       if (response.data.makealert) {
         alert("You have left this subforum once. You can't join again");
       }
@@ -73,7 +73,7 @@ const SubredditsList = () => {
         id: id,
         email: localStorage.getItem("token")
       }
-      await axios.post("/api/subgreddit/leave", { params: data });
+      await axios.post("https://forumflow.onrender.com/api/subgreddit/leave", { params: data });
     } catch (error) {
       console.error('Error leaving subforum:', error);
     }

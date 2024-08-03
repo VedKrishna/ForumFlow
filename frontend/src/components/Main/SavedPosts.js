@@ -11,7 +11,7 @@ const SavedPosts = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await axios.get("/api/savedpost");
+      const response = await axios.get("https://forumflow.onrender.com/api/savedpost");
       console.log(response.data)
       const filtered = response.data.filter(postts => postts.savedby.includes(localStorage.getItem("token")));
       setPosts(filtered);
@@ -26,7 +26,7 @@ const SavedPosts = () => {
     try{
       console.log(comment)
       axios
-        .post("/api/subgreddit/comments", { post: postt, comment: comment})
+        .post("https://forumflow.onrender.com/api/subgreddit/comments", { post: postt, comment: comment})
         .catch((err) => console.log(err));
 
       let updated = [...postts]
@@ -41,7 +41,7 @@ const SavedPosts = () => {
 
   const handleupvote = async(id, iii) => {
     axios
-      .post("/api/subgreddit/upvote", { post: id, name: localStorage.getItem("token")})
+      .post("https://forumflow.onrender.com/api/subgreddit/upvote", { post: id, name: localStorage.getItem("token")})
       .catch((err) => console.log(err));
 
       let updated = [...postts]
@@ -51,7 +51,7 @@ const SavedPosts = () => {
 
   const handledownvote = async(id, iii) => {
     axios
-      .post("/api/subgreddit/downvote", { post: id, name: localStorage.getItem("token")})
+      .post("https://forumflow.onrender.com/api/subgreddit/downvote", { post: id, name: localStorage.getItem("token")})
       .catch((err) => console.log(err));
 
       let updated = [...postts]
@@ -61,7 +61,7 @@ const SavedPosts = () => {
 
   const handleUnsavePost = async(postid, i) => {
     try{
-      let p = "/api/savedpost/"
+      let p = "https://forumflow.onrender.com/api/savedpost/"
       p = p.concat(postid)
       axios.delete(p, {params: {email: localStorage.getItem("token")}})
       
@@ -82,7 +82,7 @@ const SavedPosts = () => {
 
   const handleSavePost = async(id, i) => {
     axios
-      .post("/api/savedpost", { post: id, name: localStorage.getItem("token")})
+      .post("https://forumflow.onrender.com/api/savedpost", { post: id, name: localStorage.getItem("token")})
       .catch((err) => console.log(err));
 
       let updated = [...postts]

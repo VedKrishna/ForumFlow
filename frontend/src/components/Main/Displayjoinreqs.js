@@ -12,7 +12,7 @@ import {
   } from '../Navbar/NavbarElements';
 const DisplayJoiningreqs = () => {
   const [postts, setposts] = useState([]);
-  let url = "/api/subgreddit/"
+  let url = "https://forumflow.onrender.com/api/subgreddit/"
   url = url.concat(useParams().id)
   let url1 = url.concat("/accept")
   let url2 = url.concat("/reject")

@@ -12,7 +12,7 @@ import {
 } from '../Navbar/NavbarElements';
 const DisplayUsers = () => {
   const [postts, setposts] = useState([]);
-  let url = "/api/subgreddit/"
+  let url = "https://forumflow.onrender.com/api/subgreddit/"
   url = url.concat(useParams().id)
   useEffect(() => {
     const fetchPosts = async () => {

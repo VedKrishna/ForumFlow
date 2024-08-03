@@ -14,7 +14,7 @@ const Main = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/users', { params: { email: localStorage.getItem('token') } });
+        const response = await axios.get('https://forumflow.onrender.com/api/users', { params: { email: localStorage.getItem('token') } });
         setUserDetails(response.data);
         setFollowers(response.data.followers);
         setFollowing(response.data.following);
@@ -28,7 +28,7 @@ const Main = () => {
 
   const handleUnfollow = async (email) => {
     try {
-      await axios.delete('/api/users/followers', { params: { email, email2: localStorage.getItem('token') } });
+      await axios.delete('https://forumflow.onrender.com/api/users/followers', { params: { email, email2: localStorage.getItem('token') } });
       // Refetch data or update state to reflect changes
     } catch (error) {
       console.error(error);
@@ -37,7 +37,7 @@ const Main = () => {
 
   const handleRemoveFollow = async (email) => {
     try {
-      await axios.delete('/api/users/following', { params: { email, email2: localStorage.getItem('token') } });
+      await axios.delete('https://forumflow.onrender.com/api/users/following', { params: { email, email2: localStorage.getItem('token') } });
       // Refetch data or update state to reflect changes
     } catch (error) {
       console.error(error);

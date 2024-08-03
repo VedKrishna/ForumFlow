@@ -8,7 +8,7 @@ function Subgreddiit() {
   const Navigate = useNavigate()
   useEffect(() => {
     const fetchSubreddits = async () => {
-      const response = await axios.get("/api/subgreddit");
+      const response = await axios.get("https://forumflow.onrender.com/api/subgreddit");
      // console.log(response.data.subredditName)
      const filtered = response.data.filter(subreddit => subreddit.admin === localStorage.getItem("token"));
       setSubreddits(filtered);
@@ -17,14 +17,14 @@ function Subgreddiit() {
     fetchSubreddits();
   }, []);
   const fetchSubreddits = async () => {
-    const response = await axios.get("/api/subgreddit");
+    const response = await axios.get("https://forumflow.onrender.com/api/subgreddit");
    // console.log(response.data.subredditName)
    const filtered = response.data.filter(subreddit => subreddit.admin === localStorage.getItem("token"));
     setSubreddits(filtered);
   };
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/api/subgreddit/${id}`);
+      await axios.delete(`https://forumflow.onrender.com/api/subgreddit/${id}`);
       fetchSubreddits();
     } catch (error) {
       console.log(error);
@@ -58,7 +58,7 @@ function Subgreddiit() {
     e.preventDefault();
     console.log(nameform.description)
 		try {
-			const url = "/api/subgreddit";
+			const url = "https://forumflow.onrender.com/api/subgreddit";
 			const res = await axios.post(url, nameform);
       console.log("res",res.data)
 			// await localStorage.setItem("subgreddittoken", res.nameform.name);
